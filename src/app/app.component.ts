@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { observationEditorConfig, observationRubricsEditorConfig, questionSetEditorConfig,
-  collectionEditorConfig, courseEditorConfig, questionEditorConfig,surveyEditorConfig } from './data';
+  collectionEditorConfig, courseEditorConfig, questionEditorConfig,surveyEditorConfig,blueprintQuesSetConfig } from './data';
 
 const configMapper = {
   questionSet: questionSetEditorConfig,
+  bluePrintQuesSet: blueprintQuesSetConfig,
   question: questionEditorConfig,
   collection : collectionEditorConfig,
   course: courseEditorConfig,
@@ -41,6 +42,8 @@ export class AppComponent {
       localStorage.setItem('editorType', 'survey');
     } else if (editorType === 'rubrics') {
       localStorage.setItem('editorType', 'rubrics');
+    } else if (editorType === 'bluePrintQuesSet') {
+      localStorage.setItem('editorType', 'bluePrintQuesSet');
     }
     window.location.reload();
   }
