@@ -336,7 +336,10 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     if (_.has(event, 'shuffle')) {
       this.showShuffleMessage(event);
     }
-    this.getQuestionCountForQuestionCriteria(event)
+    if(this.questionCountCriteriaFields && this.questionCountCriteriaFields?.length > 0){
+      this.getQuestionCountForQuestionCriteria(event);
+    }
+    
     const data = _.omit(event, ['allowECM', 'levels', 'setPeriod']);
     if (!_.isEmpty(event?.levels)) {
       data.outcomeDeclaration = {
