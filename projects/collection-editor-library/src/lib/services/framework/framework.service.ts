@@ -114,7 +114,7 @@ export class FrameworkService {
     return this.publicDataService.post(option);
   }
 
-  getBlueprintData(requestbody){
+  getQuestionCount(requestbody){
     const option ={
      url: `${this.configService.urlConFig.URLS.COMPOSITE.SEARCH}`,
      data:{

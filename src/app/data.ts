@@ -323,6 +323,284 @@ export const questionSetEditorConfig = {
   }
 };
 
+export const blueprintQuesSetConfig = {
+  "context": {
+    "identifier": "do_1137829907553566721201",
+    "channel": "0137044259332587522",
+    "authToken": "",
+    "sid": "gjLOTR7fkrfwbvYc8_Sk_tffDH60QDuD",
+    "did": "20e9900618fd5c41e6e9e65fd24353c9",
+    "uid": "5ed2c962-7df6-4f52-8e1f-773a305c35b0",
+    "additionalCategories": [
+      "Textbook",
+      "Lesson Plan",
+      "Curiosity Question Set",
+      "Experiential Resource",
+      "Explanation Video",
+      "Focus Spot",
+      "Learning Outcome Definition",
+      "Lesson Plan",
+      "Marking Scheme Rubric",
+      "Pedagogy Flow",
+      "Previous Board Exam Papers",
+      "TV Lesson",
+      "Textbook"
+    ],
+    "host": "http://localhost:3000",
+    "pdata": {
+      "id": "local.sunbird.portal",
+      "ver": "5.1.1",
+      "pid": "sunbird-portal"
+    },
+    "actor": {
+      "id": "5ed2c962-7df6-4f52-8e1f-773a305c35b0",
+      "type": "User"
+    },
+    "contextRollup": {
+      "l1": "0137044259332587522"
+    },
+    "tags": [
+      "0137044259332587522",
+      "0137044259332587522"
+    ],
+    "timeDiff": -0.082,
+    "endpoint": "/data/v3/telemetry",
+    "env": "questionset_editor",
+    "user": {
+      "id": "5ed2c962-7df6-4f52-8e1f-773a305c35b0",
+      "orgIds": [
+        "0137044259332587522"
+      ],
+      "organisations": {},
+      "fullName": "Creator Creator",
+      "firstName": "Creator",
+      "lastName": "Creator",
+      "isRootOrgAdmin": false
+    },
+    "channelData": {
+      "identifier": "0137044259332587522",
+      "lastStatusChangedOn": "2023-01-05T07:18:25.617+0000",
+      "code": "0137044259332587522",
+      "frameworks": [
+        {
+          "name": "General Nursing Midwifery",
+          "relation": "hasSequenceMember",
+          "identifier": "nirayama_frccl_fw",
+          "description": "Nirayama Fraccl framework",
+          "objectType": "Framework",
+          "status": "Live",
+          "type": "K-12"
+        }
+      ],
+      "consumerId": "ca8d2046-8d52-4ee8-ad65-c022f3591b25",
+      "channel": "in.ekstep",
+      "description": "UPHRH_TEST",
+      "assetAdditionalCategories": [],
+      "languageCode": [],
+      "createdOn": "2023-01-05T07:18:25.617+0000",
+      "objectType": "Channel",
+      "versionKey": "1682421923072",
+      "collectionPrimaryCategories": [
+        "Content Playlist",
+        "Course",
+        "Digital Textbook",
+        "Question paper",
+        "PIAA Assessment",
+        "Self Assessment"
+      ],
+      "contentPrimaryCategories": [
+        "Course Assessment",
+        "eTextbook",
+        "Explanation Content",
+        "Learning Resource",
+        "Practice Question Set",
+        "Teacher Resource",
+        "Exam Question",
+        "PIAA Question Set",
+        "Self Question Set",
+        "PIAA Assessment",
+        "Blueprint Question Set"
+      ],
+      "appId": "dev.dev.portal",
+      "name": "UPHRH_TEST",
+      "primaryCategories": [
+        {
+          "identifier": "obj-cat:asset_asset_all",
+          "name": "Asset",
+          "targetObjectType": "Asset"
+        },
+        {
+          "identifier": "obj-cat:bulk-question-set_questionset_all",
+          "name": "Bulk Question Set",
+          "targetObjectType": "QuestionSet"
+        },
+        {
+          "identifier": "obj-cat:certasset_asset_all",
+          "name": "CertAsset",
+          "targetObjectType": "Asset"
+        },
+        {
+          "identifier": "obj-cat:certificate-template_asset_all",
+          "name": "Certificate Template",
+          "targetObjectType": "Asset"
+        },
+        {
+          "identifier": "obj-cat:d1_collection_all",
+          "name": "d1",
+          "targetObjectType": "Collection"
+        },
+        {
+          "identifier": "obj-cat:digital-textbook_collection_all",
+          "name": "Digital Textbook",
+          "targetObjectType": "Collection"
+        },
+        {
+          "identifier": "obj-cat:multiple-choice-question_question_all",
+          "name": "Multiple Choice Question",
+          "targetObjectType": "Question"
+        },
+        {
+          "identifier": "obj-cat:piaa-assessment_collection_all",
+          "name": "PIAA Assessment",
+          "targetObjectType": "Collection"
+        },
+        {
+          "identifier": "obj-cat:self-question-set_questionset_all",
+          "name": "PIAA Question Set",
+          "targetObjectType": "QuestionSet"
+        },
+        {
+          "identifier": "obj-cat:piaa-question-set_questionset_all",
+          "name": "PIAA Question Set",
+          "targetObjectType": "QuestionSet"
+        },
+        {
+          "identifier": "obj-cat:question-paper_collection_all",
+          "name": "Question Paper",
+          "targetObjectType": "Collection"
+        },
+        {
+          "identifier": "obj-cat:self-assessment_collection_all",
+          "name": "Self Assessment",
+          "targetObjectType": "Collection"
+        },
+        {
+          "identifier": "obj-cat:blueprint-question-set_questionset_0137044259332587522",
+          "name": "Blueprint Question Set",
+          "targetObjectType": "QuestionSet"
+        },
+        {
+          "identifier": "obj-cat:course_collection_0137044259332587522",
+          "name": "Course",
+          "targetObjectType": "Collection"
+        },
+        {
+          "identifier": "obj-cat:practice-question-set_questionset_0137044259332587522",
+          "name": "Practice Question Set",
+          "targetObjectType": "QuestionSet"
+        },
+        {
+          "identifier": "obj-cat:practice-question-set_questionset_all_questionset_0137044259332587522",
+          "name": "Practice Question Set",
+          "targetObjectType": "QuestionSet"
+        }
+      ],
+      "additionalCategories": [
+        "Asset",
+        "Blueprint Question Set",
+        "Bulk Question Set",
+        "CertAsset",
+        "Certificate Template",
+        "Content Playlist",
+        "Course",
+        "Course Assessment",
+        "d1",
+        "Digital Textbook",
+        "eTextbook",
+        "Exam Question",
+        "Explanation Content",
+        "Learning Resource",
+        "Multiple Choice Question",
+        "PIAA Assessment",
+        "PIAA Question Set",
+        "Practice Question Set",
+        "Question paper",
+        "Self Assessment",
+        "Self Question Set",
+        "Teacher Resource",
+        "Template"
+      ],
+      "lastUpdatedOn": "2023-04-25T11:25:23.072+0000",
+      "collectionAdditionalCategories": [
+        "Textbook",
+        "Lesson Plan"
+      ],
+      "assetPrimaryCategories": [
+        "Asset",
+        "CertAsset",
+        "Certificate Template"
+      ],
+      "contentAdditionalCategories": [
+        "Textbook",
+        "Lesson Plan",
+        "Curiosity Question Set",
+        "Experiential Resource",
+        "Explanation Video",
+        "Focus Spot",
+        "Learning Outcome Definition",
+        "Lesson Plan",
+        "Marking Scheme Rubric",
+        "Pedagogy Flow",
+        "Previous Board Exam Papers",
+        "TV Lesson",
+        "Textbook"
+      ],
+      "status": "Live",
+      "defaultFramework": "nirayama_frccl_fw"
+    },
+    "cloudStorageUrls": [],
+    "cloudStorage": {
+      "presigned_headers": {
+        "x-ms-blob-type": "BlockBlob"
+      }
+    },
+    "framework": "nirayama_frccl_fw"
+  },
+  "config": {
+    "mode": "edit",
+    "questionSet": {
+      "maxQuestionsLimit": 500
+    },
+    "collection": {
+      "maxContentsLimit": 1200
+    },
+    "showAddCollaborator": false,
+    "maxDepth": 1,
+    "addFromLibraryEnabled": false,
+    "enableAddFromLibrary": false,
+    "objectType": "QuestionSet",
+    "primaryCategory": "Blueprint Question Set",
+    "isRoot": true,
+    "iconClass": "fa fa-book",
+    "children": {},
+    "hierarchy": {
+      "level1": {
+        "name": "Section",
+        "type": "Unit",
+        "mimeType": "application/vnd.sunbird.questionset",
+        "primaryCategory": "Blueprint Question Set",
+        "iconClass": "fa fa-folder-o",
+        "children": {
+          "Question": [
+            "Multiple Choice Question"
+          ]
+        }
+      }
+    }
+  }
+
+  }
+
 export const questionEditorConfig = {
   context: {
     user: {

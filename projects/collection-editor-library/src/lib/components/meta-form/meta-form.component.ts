@@ -32,11 +32,11 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
   public previousShuffleValue: boolean;
   public subscription: Subscription;
   public formSectionProperties:any;
-  isDataValidated:boolean= false
+  public questionCountCriteriaFields:any[]=[];
+  isValidQuestionCriteria:boolean= false
   constructor(private editorService: EditorService, public treeService: TreeService,
               public frameworkService: FrameworkService, private helperService: HelperService,
               private configService: ConfigService, private toasterService: ToasterService) {
-                console.log('constructor loaded')
                 framworkServiceTemp = frameworkService;
                }
 
@@ -257,7 +257,15 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     });
 
     this.formFieldProperties = _.cloneDeep(formConfig);
-    this.formSectionProperties = _.cloneDeep(this.formFieldProperties[0].fields)
+  this.formFieldProperties.forEach((data)=>{
+    data.fields.forEach((data)=>{
+      if(data.code == 'requiredQuestionCount' && !this.questionCountCriteriaFields.length){
+        this.questionCountCriteriaFields = data.depends
+
+      }
+    })
+  })
+  
   }
   isReviewMode() {
     return  _.includes([ 'review', 'read', 'sourcingreview', 'orgreview' ], this.editorService.editorMode);
@@ -328,7 +336,10 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     if (_.has(event, 'shuffle')) {
       this.showShuffleMessage(event);
     }
-    this.getRequiredValues(event)
+    if(this.questionCountCriteriaFields && this.questionCountCriteriaFields?.length > 0){
+      this.getQuestionCountForQuestionCriteria(event);
+    }
+    
     const data = _.omit(event, ['allowECM', 'levels', 'setPeriod']);
     if (!_.isEmpty(event?.levels)) {
       data.outcomeDeclaration = {
@@ -344,46 +355,39 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     this.treeService.updateNode(data);
   }
 
-  getRequiredValues(event) {
-    if (event.board && event.medium?.length && event.gradeLevel?.length && event.subject?.length && event.difficultyLevel?.length && event.selectedQuestionType?.length ) {
-      this.isDataValidated = true;
-    }
-    else {
-      this.isDataValidated = false;
-    }
-  if (this.isDataValidated) {
+  getQuestionCountForQuestionCriteria(event) {
+    this.isValidQuestionCriteria = true;
+    this.questionCountCriteriaFields.forEach((fields)=>{
+      if(!event[fields] || !event[fields]?.length){
+        this.isValidQuestionCriteria = false;
+      }
+    })
+  if (this.isValidQuestionCriteria) {
     const requestbody = {
       filters: {
-        primaryCategory: ["Multiple Choice Question"],
+        primaryCategory: [],
         objectType: ["Question"],
-        board: [event.board],
-        medium: event.medium,
-        gradeLevel: event.gradeLevel,
-        subject: event.subject,
-        difficultyLevel: event.difficultyLevel,
         status: ["Live"]
       },
     }
-    this.frameworkService.getBlueprintData(requestbody).subscribe((data) => {
-      console.log('count',data.result.count)
-      console.log('section',this.formFieldProperties)
 
-
+    this.questionCountCriteriaFields.forEach((fields)=>{
+      if(fields === 'selectedQuestionType'){
+        requestbody.filters.primaryCategory = event.selectedQuestionType;
+      } else {
+        requestbody.filters[fields] = event[fields]
+      }
+    })
+    this.frameworkService.getQuestionCount(requestbody).subscribe((data) => {
       const metaDataField = _.get(this.nodeMetadata, 'data.metadata');
       const isRootNode = _.get(this.nodeMetadata, 'data.root');
       let formConfig: any = (_.get(metaDataField, 'visibility') === 'Default') || isRootNode ? _.cloneDeep(this.rootFormConfig) : _.cloneDeep(this.unitFormConfig);
-      console.log('metaData',formConfig)
       formConfig = formConfig && _.has(_.first(formConfig), 'fields') ? formConfig : [{name: '', fields: formConfig}];
       _.forEach(this.formFieldProperties,(section)=>{
         _.forEach(section.fields, field=>{
           if (field.code === 'requiredQuestionCount') {
-            // const activeNode = this.treeService.getActiveNode();
-           // const rootFirstChildNode = this.editorService.getContentChildrens(activeNode);
-            // if (rootFirstChildNode && rootFirstChildNode.length > 0) {
               field.range = _.times(data.result.count, index => index + 1);
-            // }
           }
-         // this.formFieldProperties = _.cloneDeep(formConfig[0].fields);
         })
       })
     })
