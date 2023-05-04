@@ -32,9 +32,8 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
   public previousShuffleValue: boolean;
   public subscription: Subscription;
   public formSectionProperties:any;
-  public formCriteriaSection:any[]=[];
-  public formCriteriaList:any[]= [];
-  isDataValidated:boolean= false
+  public questionCountCriteriaFields:any[]=[];
+  isValidQuestionCriteria:boolean= false
   constructor(private editorService: EditorService, public treeService: TreeService,
               public frameworkService: FrameworkService, private helperService: HelperService,
               private configService: ConfigService, private toasterService: ToasterService) {
@@ -260,13 +259,12 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     this.formFieldProperties = _.cloneDeep(formConfig);
   this.formFieldProperties.forEach((data)=>{
     data.fields.forEach((data)=>{
-      if(data.code == 'requiredQuestionCount'){
-        this.formCriteriaSection.push(data.depends)
+      if(data.code == 'requiredQuestionCount' && !this.questionCountCriteriaFields.length){
+        this.questionCountCriteriaFields = data.depends
 
       }
     })
   })
-  this.formCriteriaList = this.formCriteriaSection[0]
   
   }
   isReviewMode() {
@@ -338,7 +336,7 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     if (_.has(event, 'shuffle')) {
       this.showShuffleMessage(event);
     }
-    this.getRequiredValues(event)
+    this.getQuestionCountForQuestionCriteria(event)
     const data = _.omit(event, ['allowECM', 'levels', 'setPeriod']);
     if (!_.isEmpty(event?.levels)) {
       data.outcomeDeclaration = {
@@ -354,14 +352,14 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     this.treeService.updateNode(data);
   }
 
-  getRequiredValues(event) {
-    this.isDataValidated = true;
-    this.formCriteriaList.forEach((fields)=>{
+  getQuestionCountForQuestionCriteria(event) {
+    this.isValidQuestionCriteria = true;
+    this.questionCountCriteriaFields.forEach((fields)=>{
       if(!event[fields] || !event[fields]?.length){
-        this.isDataValidated = false;
+        this.isValidQuestionCriteria = false;
       }
     })
-  if (this.isDataValidated) {
+  if (this.isValidQuestionCriteria) {
     const requestbody = {
       filters: {
         primaryCategory: [],
@@ -370,14 +368,14 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
       },
     }
 
-    this.formCriteriaList.forEach((fields)=>{
+    this.questionCountCriteriaFields.forEach((fields)=>{
       if(fields === 'selectedQuestionType'){
         requestbody.filters.primaryCategory = event.selectedQuestionType;
       } else {
         requestbody.filters[fields] = event[fields]
       }
     })
-    this.frameworkService.getBlueprintData(requestbody).subscribe((data) => {
+    this.frameworkService.getQuestionCount(requestbody).subscribe((data) => {
       const metaDataField = _.get(this.nodeMetadata, 'data.metadata');
       const isRootNode = _.get(this.nodeMetadata, 'data.root');
       let formConfig: any = (_.get(metaDataField, 'visibility') === 'Default') || isRootNode ? _.cloneDeep(this.rootFormConfig) : _.cloneDeep(this.unitFormConfig);
@@ -385,13 +383,8 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
       _.forEach(this.formFieldProperties,(section)=>{
         _.forEach(section.fields, field=>{
           if (field.code === 'requiredQuestionCount') {
-            // const activeNode = this.treeService.getActiveNode();
-           // const rootFirstChildNode = this.editorService.getContentChildrens(activeNode);
-            // if (rootFirstChildNode && rootFirstChildNode.length > 0) {
               field.range = _.times(data.result.count, index => index + 1);
-            // }
           }
-         // this.formFieldProperties = _.cloneDeep(formConfig[0].fields);
         })
       })
     })
