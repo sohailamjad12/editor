@@ -397,7 +397,6 @@ export class EditorService {
     const instance = this;
     this.data = {};
     const data = this.treeService.getFirstChild();
-    this.getUpdatedNodeMetaData();
     return {
       nodesModified: this.getUpdatedNodeMetaData(),
       hierarchy: instance.getHierarchyObj(data)
