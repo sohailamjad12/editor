@@ -55,6 +55,7 @@
             <!-- Right Player Sections -->
             <div class="eight wide column bg-white pl-40 mb-10 w-73">
               <ng-container *ngIf="(isCurrentNodeFolder === true || isCurrentNodeRoot === true) && unitFormConfig && selectedNodeData && rootFormConfig">
+                <div *ngIf="selectedNodeData?.data?.primaryCategory === 'Blueprint Question Set'"><h4>Total Questions: {{this.totalQuestionCount}}</h4></div>
                 <lib-meta-form [rootFormConfig]="rootFormConfig" [nodeMetadata]="selectedNodeData" [unitFormConfig]="unitFormConfig"
                 (toolbarEmitter)="toolbarEventListener($event)"></lib-meta-form>
               </ng-container>

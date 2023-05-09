@@ -257,14 +257,14 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     });
 
     this.formFieldProperties = _.cloneDeep(formConfig);
-  this.formFieldProperties.forEach((data)=>{
-    data.fields.forEach((data)=>{
-      if(data.code == 'requiredQuestionCount' && !this.questionCountCriteriaFields.length){
-        this.questionCountCriteriaFields = data.depends
+    this.formFieldProperties.forEach((data)=>{
+      data.fields.forEach((data)=>{
+        if(data.code == 'requiredQuestionCount' && !this.questionCountCriteriaFields.length){
+          this.questionCountCriteriaFields = data.depends
 
-      }
-    })
-  })
+        }
+      });
+    });
   
   }
   isReviewMode() {
@@ -351,8 +351,8 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     if (!_.isEmpty(this.appIcon) && this.showAppIcon) {
       data.appIcon = this.appIcon;
     }
-    this.toolbarEmitter.emit({ button: 'onFormValueChange', data });
     this.treeService.updateNode(data);
+    this.toolbarEmitter.emit({ button: 'onFormValueChange', data });
   }
 
   getQuestionCountForQuestionCriteria(event) {

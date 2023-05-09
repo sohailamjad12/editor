@@ -95,6 +95,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public onComponentDestroy$ = new Subject<any>();
   public outcomeDeclaration: any;
   public levelsArray: any;
+  public totalQuestionCount: number = 0;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService, private dialcodeService: DialcodeService,
@@ -493,6 +494,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
       case 'onFormValueChange':
         this.updateToolbarTitle(event);
+        this.updateTotalQuestionCount(event);
         break;
       case 'backContent':
         this.redirectToChapterListTab();
@@ -544,6 +546,39 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     } else if (_.isEmpty(data?.data?.name) && selectedNode?.data?.root) {
       this.toolbarConfig.title = 'Untitled';
     }
+  }
+
+  updateTotalQuestionCount(data?: any) {
+    const selectedNode = this.treeService.getActiveNode();
+    if(!(selectedNode?.data?.objectType === 'QuestionSet' && selectedNode?.data?.primaryCategory === 'Blueprint Question Set')) {
+      return;
+    }  
+    const nodesModified = _.get(this.editorService.getCollectionHierarchy(), 'nodesModified');
+    let totalCount = 0;
+    const sectionNodes = _.pickBy(nodesModified, {root: false});
+    if(_.isEmpty(sectionNodes) && !!data && (!_.isEmpty(this.collectionTreeNodes.data.children))){
+      _.forEach(this.collectionTreeNodes.data.children, (node) => {
+        let sectionQuestionCount = 0;
+        if(!!node?.requiredQuestionCount || !!(node?.maxQuestions)){
+            sectionQuestionCount = !!(node?.maxQuestions) ? node?.maxQuestions : node?.requiredQuestionCount;
+          }
+        totalCount +=  sectionQuestionCount;
+      });
+    } else {
+      _.forEach(sectionNodes, (node, key) => {
+        let sectionQuestionCount = 0;
+      if(key !== selectedNode?.data?.id && (!!node?.metadata?.requiredQuestionCount ||  !!node?.metadata?.maxQuestions)){
+          sectionQuestionCount = !!(node?.metadata?.maxQuestions) ? node?.metadata?.maxQuestions : node?.metadata?.requiredQuestionCount;
+        } else if(key === selectedNode?.data?.id && (!!data?.data?.requiredQuestionCount || !!data?.data?.maxQuestions)) {
+          sectionQuestionCount =  !!data?.data?.maxQuestions ? data?.data?.maxQuestions :  data?.data?.requiredQuestionCount;
+        } else if(key === selectedNode?.data?.id && (!!node?.metadata?.requiredQuestionCount || !!node?.metadata?.maxQuestions) && !data) {
+          sectionQuestionCount =  !!node?.metadata?.maxQuestions ? node?.metadata?.maxQuestions : node?.metadata?.requiredQuestionCount;
+        }
+        totalCount +=  sectionQuestionCount;
+      });
+    }
+      
+    this.totalQuestionCount  = totalCount;
   }
 
   showLibraryComponentPage() {
@@ -905,6 +940,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.collectionTreeNodes.data.childNodes = _.filter(this.collectionTreeNodes.data.childNodes, (key) => {
       return key !== activeNode.data.id;
     });
+    this.updateTotalQuestionCount();
   }
 
   updateSubmitBtnVisibility() {
