@@ -398,9 +398,33 @@ export class EditorService {
     this.data = {};
     const data = this.treeService.getFirstChild();
     return {
-      nodesModified: this.treeService.treeCache.nodesModified,
+      nodesModified: this.getUpdatedNodeMetaData(),
       hierarchy: instance.getHierarchyObj(data)
     };
+  }
+
+  getUpdatedNodeMetaData(){
+  const parentNodeId = _.findKey(this.treeService.treeCache.nodesModified,(node)=>{
+    return node.root;
+  });
+  const parentNode = this.treeService.treeCache.nodesModified[parentNodeId];
+  if(parentNode?.objectType === 'QuestionSet' && parentNode?.metadata?.primaryCategory === 'Blueprint Question Set'){
+     _.forEach(this.treeService.treeCache.nodesModified, (node, nodeId)=>{
+      if(!node.root){
+        const {board, medium, gradeLevel, subject, difficultyLevel, selectedQuestionType, requiredQuestionCount} = this.treeService.treeCache.nodesModified[nodeId]?.metadata;
+        this.treeService.treeCache.nodesModified[nodeId].metadata.criteria = [{
+        board:board,
+        medium:medium,
+        gradeLevel:gradeLevel,
+        subject:subject,
+        difficultyLevel:difficultyLevel,
+        selectedQuestionType:selectedQuestionType,
+        requiredQuestionCount:requiredQuestionCount,
+        }]
+      }
+     })    
+  } 
+  return this.treeService.treeCache.nodesModified;
   }
 
   getHierarchyObj(data, questionId?, selectUnitId?, parentId?) {
