@@ -412,7 +412,7 @@ export class EditorService {
      _.forEach(this.treeService.treeCache.nodesModified, (node, nodeId)=>{
       if(!node.root){
         const {board, medium, gradeLevel, subject, difficultyLevel, selectedQuestionType, requiredQuestionCount} = this.treeService.treeCache.nodesModified[nodeId]?.metadata;
-        this.treeService.treeCache.nodesModified[nodeId].metadata.criteria = [{
+        this.treeService.treeCache.nodesModified[nodeId].metadata.criterias = [{
         board:board,
         medium:medium,
         gradeLevel:gradeLevel,
