@@ -260,9 +260,9 @@ export class TreeService {
   }
 
   updateEvaluable(nodeId){
-    this.treeCache.nodesModified[nodeId].metadata.evaluable = this.treeCache.nodesModified[nodeId].metadata.primaryCategory === this.configService.editorConfig.evaluableQuestionSet ? true:false;
+    this.treeCache.nodesModified[nodeId].metadata.serverEvaluable = this.treeCache.nodesModified[nodeId].metadata.primaryCategory === this.configService.editorConfig.evaluableQuestionSet ? true:false;
       if(!this.treeCache.nodesModified[nodeId].root){
-        this.treeCache.nodesModified[nodeId].metadata.evaluable = this.getFirstChild().data.primaryCategory === this.configService.editorConfig.evaluableQuestionSet?true:false;
+        this.treeCache.nodesModified[nodeId].metadata.serverEvaluable = this.getFirstChild().data.primaryCategory === this.configService.editorConfig.evaluableQuestionSet?true:false;
         } else {
         this.updateFirstChild(this.treeCache.nodesModified[nodeId].metadata.primaryCategory)
       }
