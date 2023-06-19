@@ -49,7 +49,9 @@ import { TranslationsComponent } from './components/translations/translations.co
 import { PublishChecklistComponent } from './components/publish-checklist/publish-checklist.component';
 import { BulkUploadComponent  } from './components/bulk-upload/bulk-upload.component';
 import { RelationalMetadataComponent } from './components/relational-metadata/relational-metadata.component';
-import { ResourceLibraryModule } from '@project-sunbird/sunbird-resource-library';
+// import { ResourceLibraryModule } from '@project-sunbird/sunbird-resource-library';
+
+import { ResourceLibraryModule } from 'upsmf-resource-library';
 import { AppLoaderComponent } from './components/app-loader/app-loader.component';
 import { AssignPageNumberComponent } from './components/assign-page-number/assign-page-number.component';
 import { PlainTreeComponent } from './components/plain-tree/plain-tree.component';
