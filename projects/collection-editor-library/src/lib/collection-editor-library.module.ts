@@ -29,7 +29,7 @@ import { QuestionComponent } from './components/question/question.component';
 import {SunbirdPdfPlayerModule} from '@project-sunbird/sunbird-pdf-player-v9';
 import { SunbirdEpubPlayerModule } from '@project-sunbird/sunbird-epub-player-v9';
 import { SunbirdVideoPlayerModule } from '@project-sunbird/sunbird-video-player-v9';
-import { QumlLibraryModule } from '@project-sunbird/sunbird-quml-player';
+import { QumlLibraryModule } from 'sunbird-quml-player-exam';
 import {CarouselModule} from 'ngx-bootstrap/carousel';
 import { TelemetryInteractDirective } from './directives/telemetry-interact/telemetry-interact.directive';
 import { DateFormatPipe } from './directives/date-format/date-format.pipe';
@@ -49,7 +49,7 @@ import { TranslationsComponent } from './components/translations/translations.co
 import { PublishChecklistComponent } from './components/publish-checklist/publish-checklist.component';
 import { BulkUploadComponent  } from './components/bulk-upload/bulk-upload.component';
 import { RelationalMetadataComponent } from './components/relational-metadata/relational-metadata.component';
-import { ResourceLibraryModule } from '@project-sunbird/sunbird-resource-library';
+import { ResourceLibraryModule } from 'sunbird-resource-library-exam';
 import { AppLoaderComponent } from './components/app-loader/app-loader.component';
 import { AssignPageNumberComponent } from './components/assign-page-number/assign-page-number.component';
 import { PlainTreeComponent } from './components/plain-tree/plain-tree.component';
@@ -58,6 +58,7 @@ import { ProgressStatusComponent } from './components/progress-status/progress-s
 import {TermAndConditionComponent} from './components/term-and-condition/term-and-condition.component';
 
 import { QualityParamsModalComponent } from './components/quality-params-modal/quality-params-modal.component';
+
 @NgModule({
   declarations: [
     CollectionEditorLibraryComponent,
