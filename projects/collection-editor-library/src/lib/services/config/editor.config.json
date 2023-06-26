@@ -30,6 +30,9 @@
     "showAddCollaborator": false,
     "enableBulkUpload": false,
     "evaluableQuestionSet": "PIAA Question Set",
+    "server":{"mode":"server"},
+    "client":{"mode":"client"},
+    "editorModeCheck":"server",
     "defaultStates": {
         "nonInteractiveQuestions": {
             "MTF": {
