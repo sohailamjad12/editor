@@ -933,6 +933,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   prepareRequestBody() {
+    const parentNodeId = _.findKey(this.treeService.treeCache.nodesModified,(node)=>{
+      return node.root;
+    });
+    const parentNode = this.treeService.treeCache.nodesModified[parentNodeId];
     const questionId = this.questionId ? this.questionId : UUID.UUID();
     this.newQuestionID = questionId;
     const data = this.treeNodeData;
@@ -941,7 +945,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.editorService.data = {};
     this.editorService.selectedSection = selectedUnitId;
     const metaData = this.getQuestionMetadata();
-    metaData.serverEvaluable = data?.data.primaryCategory === this.configService.editorConfig.evaluableQuestionSet ? true:false;
+    // metaData.eval = data?.data.primaryCategory === this.configService.editorConfig.evaluableQuestionSet ? this.configService.editorConfig.server:this.configService.editorConfig.client;
+    metaData.eval = parentNode.metadata.eval || ''
     this.setQuestionTypeValues(metaData);
     return {
       nodesModified: {

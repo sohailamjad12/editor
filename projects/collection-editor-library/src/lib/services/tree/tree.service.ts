@@ -260,20 +260,36 @@ export class TreeService {
   }
 
   updateEvaluable(nodeId){
-    this.treeCache.nodesModified[nodeId].metadata.serverEvaluable = this.treeCache.nodesModified[nodeId].metadata.primaryCategory === this.configService.editorConfig.evaluableQuestionSet ? true:false;
+    this.treeCache.nodesModified[nodeId].metadata.eval = this.treeCache.nodesModified[nodeId].metadata.primaryCategory === this.configService.editorConfig.evaluableQuestionSet ? 
+    this.configService.editorConfig.server:this.configService.editorConfig.client;
       if(!this.treeCache.nodesModified[nodeId].root){
-        this.treeCache.nodesModified[nodeId].metadata.serverEvaluable = this.getFirstChild().data.primaryCategory === this.configService.editorConfig.evaluableQuestionSet?true:false;
+          this.treeCache.nodesModified[nodeId].metadata.eval = this.getFirstChild().data.primaryCategory === this.configService.editorConfig.evaluableQuestionSet? 
+          this.configService.editorConfig.server:this.configService.editorConfig.client;
+          this.overrideEvaluable(nodeId);
         } else {
-        this.updateFirstChild(this.treeCache.nodesModified[nodeId].metadata.primaryCategory)
+          this.updateFirstChild(this.treeCache.nodesModified[nodeId].metadata.primaryCategory)
+          if(this.getFirstChild().data.metadata.mode) {
+            this.treeCache.nodesModified[nodeId].metadata.eval = this.getFirstChild().data.metadata.mode === this.configService.editorConfig.editorModeCheck ? 
+            this.configService.editorConfig.server:this.configService.editorConfig.client;
+          }
       }
+      
   }
 
   updateFirstChild(type) {
     $(this.treeNativeElement).fancytree('getRootNode').getFirstChild().data.primaryCategory = type
   }
 
+  overrideEvaluable(nodeId){
+   const firstNode = this.getFirstChild()
+   if(this.getFirstChild().data.metadata.mode) {
+      this.treeCache.nodesModified[nodeId].metadata.eval = firstNode.data.metadata.mode === this.configService.editorConfig.editorModeCheck ? 
+      this.configService.editorConfig.server:this.configService.editorConfig.client;
+   }
+  }
+
   clearTreeCache(node?) {
-    if (node) {
+    if (node) { 
       delete this.treeCache.nodesModified[node.id];
       _.remove(this.treeCache.nodes, val => val === node.id);
     } else {
