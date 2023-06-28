@@ -424,7 +424,13 @@ export class EditorService {
         }
       })    
     } 
-    delete this.treeService.treeCache.nodesModified[parentNodeId].metadata.mode;
+    _.forEach(this.treeService.treeCache.nodesModified, (node, nodeId)=>{
+      if(!node.root && parentNode?.metadata.eval){
+        this.treeService.treeCache.nodesModified[nodeId].metadata.eval = parentNode.metadata.eval;
+      }
+    })
+    this.treeService.treeCache.nodesModified[parentNodeId]?.metadata.hasOwnProperty('mode')? 
+    delete this.treeService.treeCache.nodesModified[parentNodeId]?.metadata?.mode:''
     return this.treeService.treeCache.nodesModified;
   }
 
