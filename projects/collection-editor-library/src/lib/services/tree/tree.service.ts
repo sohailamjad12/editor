@@ -267,7 +267,7 @@ export class TreeService {
           this.configService.editorConfig.server:this.configService.editorConfig.client;
           this.overrideEvaluable(nodeId);
         } else {
-          this.updateFirstChild(this.treeCache.nodesModified[nodeId].metadata.primaryCategory)
+          this.updateFirstChild(this.treeCache.nodesModified[nodeId].metadata.eval)
           if(this.getFirstChild().data.metadata.mode) {
             this.treeCache.nodesModified[nodeId].metadata.eval = this.getFirstChild().data.metadata.mode === this.configService.editorConfig.editorModeCheck ? 
             this.configService.editorConfig.server:this.configService.editorConfig.client;
@@ -276,8 +276,8 @@ export class TreeService {
       
   }
 
-  updateFirstChild(type) {
-    $(this.treeNativeElement).fancytree('getRootNode').getFirstChild().data.primaryCategory = type
+  updateFirstChild(evalMode:any) {
+    $(this.treeNativeElement).fancytree('getRootNode').getFirstChild().data.eval = evalMode;
   }
 
   overrideEvaluable(nodeId){
