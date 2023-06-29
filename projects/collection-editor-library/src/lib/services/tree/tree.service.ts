@@ -267,11 +267,11 @@ export class TreeService {
           this.configService.editorConfig.server:this.configService.editorConfig.client;
           this.overrideEvaluable(nodeId);
         } else {
-          this.updateFirstChild(this.treeCache.nodesModified[nodeId].metadata.eval)
-          if(this.getFirstChild().data.metadata.mode) {
+           if(this.getFirstChild().data.metadata.mode) {
             this.treeCache.nodesModified[nodeId].metadata.eval = this.getFirstChild().data.metadata.mode === this.configService.editorConfig.editorModeCheck ? 
             this.configService.editorConfig.server:this.configService.editorConfig.client;
           }
+          this.updateFirstChild(this.treeCache.nodesModified[nodeId].metadata.eval)
       }
       
   }
