@@ -11,6 +11,8 @@ import { DataService } from '../data/data.service';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { ExportToCsv } from 'export-to-csv';
+import 'jquery.fancytree';
+declare var $: any;
 interface SelectedChildren {
   label?: string;
   primaryCategory?: string;
@@ -407,7 +409,7 @@ export class EditorService {
     const parentNodeId = _.findKey(this.treeService.treeCache.nodesModified,(node)=>{
       return node.root;
     });
-    const parentNode = this.treeService.treeCache.nodesModified[parentNodeId];
+    const parentNode = $(this.treeService.treeNativeElement).fancytree('getRootNode').getFirstChild().data;
     if(parentNode?.objectType === 'QuestionSet' && parentNode?.metadata?.primaryCategory === 'Blueprint Question Set'){
       _.forEach(this.treeService.treeCache.nodesModified, (node, nodeId)=>{
         if(!node.root){
@@ -425,9 +427,10 @@ export class EditorService {
       })    
     } 
     _.forEach(this.treeService.treeCache.nodesModified, (node, nodeId)=>{
-      if(!node.root && parentNode?.metadata.eval){
-        this.treeService.treeCache.nodesModified[nodeId].metadata.eval = parentNode.metadata.eval;
+      if(!node.root && parentNode?.eval){
+        this.treeService.treeCache.nodesModified[nodeId].metadata.eval = parentNode.eval;
       }
+
     })
     this.treeService.treeCache.nodesModified[parentNodeId]?.metadata.hasOwnProperty('mode')? 
     delete this.treeService.treeCache.nodesModified[parentNodeId]?.metadata?.mode:''
