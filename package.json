@@ -62,7 +62,7 @@
     "ngx-chips": "2.1.0",
     "ngx-infinite-scroll": "^6.0.0",
     "rxjs": "~6.6.3",
-    "sunbird-quml-player-exam": "^5.3.5",
+    "sunbird-quml-player-exam": "^5.3.8",
     "svg2img": "^0.6.1",
     "tslib": "^2.0.0",
     "upsmf-collection-editor": "^1.0.8",
