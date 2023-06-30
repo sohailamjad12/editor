@@ -427,8 +427,8 @@ export class EditorService {
       })    
     } 
     _.forEach(this.treeService.treeCache.nodesModified, (node, nodeId)=>{
-      if(!node.root && parentNode?.eval){
-        this.treeService.treeCache.nodesModified[nodeId].metadata.eval = parentNode.eval;
+      if(!node.root && parentNode?.eval || parentNode?.metadata.eval){
+        this.treeService.treeCache.nodesModified[nodeId].metadata.eval = parentNode.eval || parentNode?.metadata.eval;
       }
 
     })
