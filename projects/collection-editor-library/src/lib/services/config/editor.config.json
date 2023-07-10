@@ -29,7 +29,7 @@
     },
     "showAddCollaborator": false,
     "enableBulkUpload": false,
-    "evaluableQuestionSet": "PIAA Question Set",
+    "evaluableQuestionSet": "",
     "server":{"mode":"server"},
     "client":{"mode":"client"},
     "editorModeCheck":"server",
