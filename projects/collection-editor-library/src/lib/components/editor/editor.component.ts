@@ -17,6 +17,9 @@ import * as _ from 'lodash-es';
 import { ConfigService } from '../../services/config/config.service';
 import { DialcodeService } from '../../services/dialcode/dialcode.service';
 import { FormControl, FormGroup } from '@angular/forms';
+import { QuestionService } from '../../services/question/question.service';
+import { ServerResponse } from '../../interfaces/serverResponse';
+import { EditorCursor } from '../../collection-editor-cursor.service';
 
 let evidenceMimeType;
 let ecm;
@@ -96,10 +99,14 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public outcomeDeclaration: any;
   public levelsArray: any;
   public totalQuestionCount: number = 0;
+  questionList:any[]=[];
+  treeNodeData:any;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService, private dialcodeService: DialcodeService,
-              public configService: ConfigService, private changeDetectionRef: ChangeDetectorRef) {
+              public configService: ConfigService, private changeDetectionRef: ChangeDetectorRef,
+              private questionService: QuestionService,
+              private editorCursor: EditorCursor) {
   }
 
   @HostListener('window:unload', ['$event'])
@@ -116,6 +123,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.toolbarConfig = this.editorService.getToolbarConfig();
     this.isObjectTypeCollection = this.objectType === 'questionSet' ? false : true;
     this.isStatusReviewMode = this.isReviewMode();
+    // this.treeNodeData = this.treeService.getFirstChild();
 
     if (this.objectType === 'question') {
       this.collectionId = _.get(this.editorConfig, 'context.collectionIdentifier');
@@ -661,6 +669,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.editorService.addResourceToQuestionset(this.collectionId, activeNode.data.id,
           children).subscribe(res => {
           if (_.get(res, 'responseCode') === 'OK') {
+            this.getQuestionListData(children);
             this.libraryEventListener({});
           }
         }, err => {
@@ -672,6 +681,88 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
   }
+
+    getQuestionListData(contentIds){
+    let difficultyLevelList= [];
+    let subjectLevelList = [];
+    this.editorCursor.getQuestions(contentIds).subscribe((data:any)=>{
+      console.log('contentIds',data)
+      this.questionList=  data?.questions
+      this.questionList.forEach(ques=>{
+        difficultyLevelList.push(...ques?.difficultyLevel)
+        subjectLevelList.push(...ques?.subject)
+      })
+      console.log(difficultyLevelList)
+      console.log(subjectLevelList)
+       this.prepareRequestBody(contentIds,subjectLevelList,difficultyLevelList)
+      // this.questionService.updateHierarchyQuestionUpdate(quesRequestBody)
+      //       .subscribe((response: ServerResponse) => {
+      //           // if (this.showAddSecondaryQuestionCat) {
+      //           //   const result = _.get(response.result.identifiers, this.questionId);
+      //           //   this.editorService.parentIdentifier = result;
+      //           // }
+        
+      //           // this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.008'));
+                
+      //         }, (err: ServerResponse) => {
+      //           const errInfo = {
+      //             errorMsg: 'Question updating failed. Please try again...',
+      //           };
+      //           this.editorService.apiErrorHandling(err, errInfo);
+      //         });
+    })
+    }
+
+    prepareRequestBody(childrenIds, subject,difficultyLevel) {
+      const treeNodeData = _.get(this.treeService.getFirstChild(), 'data');
+      const data = treeNodeData;
+      const parentRootId= data?.id;
+      let subjectList = data?.metadata?.subject || [];
+      let difficultyLevelList = data?.metadata?.difficultyLevel || [];
+      subjectList.push(...subject)
+      difficultyLevelList.push(...difficultyLevel)
+      const subjectListfirst =  new Set(subjectList);
+      const diffficultyListFirst = new Set(difficultyLevelList)
+      const uniqueSubjectList = [...subjectListfirst];
+      const uniqueDiffficultyList = [...diffficultyListFirst]
+      this.treeService.updateMetaDataProperty('subject',uniqueSubjectList)
+      this.treeService.updateMetaDataProperty('difficultyLevel',uniqueDiffficultyList)
+      const reqBody = {
+        'request': {
+          'questionset':{
+            difficultyLevel:uniqueDiffficultyList,
+            subject:uniqueSubjectList   
+          }
+        }
+      }
+      this.editorService.updateQuestionSet(parentRootId,reqBody).subscribe((res)=>{
+        console.log('ques',res)
+        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.008'));
+      },(err: ServerResponse) => {
+          console.log(err)
+      }
+      )
+      console.log('difficultyLevelList',uniqueSubjectList)
+      console.log('difficultyLevelList',uniqueDiffficultyList)
+
+    
+      //  const rootMetaData = {
+      //   difficultyLevel:uniqueDiffficultyList,
+      //   subject: uniqueSubjectList,
+      //   eval: data?.metadata?.eval || data?.eval
+      //  }
+      // return {
+      //   nodesModified: {
+      //     [parentRootId]:{
+      //       metadata:rootMetaData,
+      //       objectType: 'QuestionSet',
+      //       root: true,
+      //       isNew:false
+      //     }
+      //   },
+      //   hierarchy: this.editorService.getHierarchyObj(data, '', '')
+      // };
+    }
 
   saveContent() {
     return new Promise(async (resolve, reject) => {

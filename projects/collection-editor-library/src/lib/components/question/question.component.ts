@@ -936,12 +936,52 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     const questionId = this.questionId ? this.questionId : UUID.UUID();
     this.newQuestionID = questionId;
     const data = this.treeNodeData;
+    const parentRootId= data['data'].id
     const activeNode = this.treeService.getActiveNode();
     const selectedUnitId = _.get(activeNode, 'data.id');
     this.editorService.data = {};
     this.editorService.selectedSection = selectedUnitId;
     const metaData = this.getQuestionMetadata();
+    const metaDataObj =  this.editorService.getMetaChildrenObj(data,questionId,selectedUnitId,'',metaData.subject,metaData.difficultyLevel);
+    console.log('metaData',metaDataObj)
+    let subjectList = []
+    let difficultyLevelList = []
+    // metaDataObj.children.forEach((data)=>{
+    //   data.children.forEach((child)=>{
+    //     subjectList.push(child.subject);
+    //     difficultyLevelList.push(child.difficultyLevel);
+    //   })
+    // })
+    Object.keys(metaDataObj).forEach(key => {
+      const value = metaDataObj[key];
+      console.log(value);
+      value.children.forEach((child)=>{
+        if(child.subject){
+          subjectList.push(...child.subject);
+        }
+        if(child.difficultyLevel){
+          difficultyLevelList.push(...child.difficultyLevel);
+        }
+      })
+    
+    });
+
+    const subjectListfirst =  new Set(subjectList);
+    const diffficultyListFirst = new Set(difficultyLevelList)
+
+    const uniqueSubjectList = [...subjectListfirst];
+    const uniqueDiffficultyList = [...diffficultyListFirst]
+
+    console.log('difficultyLevelList',uniqueSubjectList)
+    console.log('difficultyLevelList',uniqueDiffficultyList)
      metaData.eval = activeNode?.data.metadata.eval || data?.data.eval
+     const rootMetaData = {
+      difficultyLevel:uniqueDiffficultyList,
+      subject: uniqueSubjectList,
+      "eval": {
+          "mode": "server"
+      },
+     }
     this.setQuestionTypeValues(metaData);
     return {
       nodesModified: {
@@ -950,6 +990,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           objectType: 'Question',
           root: false,
           isNew: !this.questionId
+        },
+        [parentRootId]:{
+          metadata:rootMetaData,
+          objectType: 'QuestionSet',
+          root: true,
+          isNew:false
         }
       },
       hierarchy: this.editorService.getHierarchyObj(data, questionId, selectedUnitId)

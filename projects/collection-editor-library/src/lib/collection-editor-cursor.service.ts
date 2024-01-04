@@ -1,6 +1,7 @@
 export abstract class EditorCursor {
 
   abstract setQuestionMap(key: string, value: any): void;
-  abstract clearQuestionMap(): void;
+  abstract clearQuestionMap(): void;;
+  abstract getQuestions(data:any);
 
 }

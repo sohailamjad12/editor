@@ -172,6 +172,14 @@ export class EditorService {
     return this.publicDataService.get(req);
   }
 
+  updateQuestionSet(rootId:any, body:any):Observable<any> {
+   const req = {
+    url: `${this.configService.urlConFig.URLS.QuestionSet.UPDATE}/${rootId}`,
+    data: body
+   };
+   return this.publicDataService.patch(req)
+  }
+
   updateHierarchy(): Observable<any> {
     const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
     const req = {
@@ -469,6 +477,90 @@ export class EditorService {
     return instance.data;
   }
 
+  getMetaChildrenObj(data, questionId?, selectUnitId?, parentId?,subject?,difficultyLevel?) {
+    const instance = this;
+    if (data && data.data) {
+      const relationalMetadata = this.getRelationalMetadataObj(data.children);
+      instance.data[data.data.id] = {
+        name: data.title,
+        // children: _.map(data.children, (child) => child.data.id),
+        children: _.map(data?.children, (child) => ({
+          id:child.data.id,
+          subject:child.data.metadata.subject,
+          difficultyLevel:child.data.metadata.difficultyLevel
+        })),
+        ...(!_.isEmpty(relationalMetadata) &&  {relationalMetadata}),
+        root: data.data.root
+      };
+      console.log('finalObj',instance.data[data.data.id])
+      if (questionId && selectUnitId && selectUnitId === data.data.id) {
+          if (parentId) {
+            const children = instance.data[data.data.id].children;
+            const index = _.findIndex(children, (e) => {
+              return e === parentId;
+            }, 0);
+            const setIndex = index + 1;
+            children.splice(setIndex, 0, questionId);
+          } else {
+            const childData={
+              id:questionId,
+              subject:subject,
+              difficultyLevel:difficultyLevel
+            }
+            instance.data[data.data.id].children.push(childData);
+          }
+      }
+      if (questionId && selectUnitId && data.folder === false) {
+          delete instance.data[data.data.id];
+      }
+      _.forEach(data.children, (collection) => {
+        instance.getMetaChildrenObj(collection, questionId, selectUnitId, parentId,subject,difficultyLevel );
+      });
+    }
+    return instance.data;
+    // const instance = this;
+    // if (data && data.data) {
+    //   const relationalMetadata = this.getRelationalMetadataObj(data.children);
+    //   instance.data[data.data.id] = {
+    //     name: data.title,
+    //     // subject:data.subject,
+    //     // difficultyLevel:data.difficultyLevel,
+    //     children: _.map(data.children, (child) => child.data.id),
+         
+        
+    //     ...(!_.isEmpty(relationalMetadata) &&  {relationalMetadata}),
+    //     root: data.data.root,
+    //   };
+    //   console.log('finalObj',instance.data[data.data.id])
+    //   if (questionId && selectUnitId && selectUnitId === data.data.id) {
+    //       if (parentId) {
+    //         const children = instance.data[data.data.id].children;
+    //         const index = _.findIndex(children, (e) => {
+    //           return e === parentId;
+    //         }, 0);
+    //         const setIndex = index + 1;
+    //         children.splice(setIndex, 0, questionId);
+    //       } else {
+    //         instance.data[data.data.id].children.push(questionId);
+    //       }
+    //   }
+    //   if (questionId && selectUnitId && data.folder === false) {
+    //       delete instance.data[data.data.id];
+    //   }
+    //   _.forEach(data.children, (collection) => {
+    //     instance.getMetaChildrenObj(collection, questionId, selectUnitId, parentId);
+    //   });
+    // }
+    // console.log('finalInstance',instance.data)
+    // return instance.data;
+  }
+  
+
+  // children: _.map(data?.children, (child) => ({
+  //   id:child.data.id,
+  //   subject:child.data.metadata.subject,
+  //   difficultyLevel:child.data.metadata.difficultyLevel
+  //  })),
 
  _toFlatObjFromHierarchy(data) {
     const instance = this;
