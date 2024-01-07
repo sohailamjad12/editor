@@ -20,10 +20,10 @@
       "dom"
     ],
     "paths": {
-      "collection-editor-library": [
+      "upsmf-collection-editor": [
         "dist/collection-editor-library"
       ],
-      "collection-editor-library/*": [
+      "upsmf-collection-editor/*": [
         "dist/collection-editor-library/*"
       ]
     }

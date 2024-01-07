@@ -41,6 +41,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   public nodeParentDependentMap = {};
   public treeData: any = [];
   public branchingObject = {};
+  isHideLib:boolean = false;
   public rootMenuTemplate = `<span class="ui dropdown sb-dotted-dropdown" autoclose="itemClick" suidropdown="" tabindex="0">
   <span id="contextMenu" class="p-0 w-auto"><i class="icon ellipsis vertical sb-color-black"></i></span>
   <span id= "contextMenuDropDown" class="menu transition hidden" suidropdownmenu="" style="">
@@ -65,6 +66,10 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.config = _.cloneDeep(this.editorService.editorConfig.config);
+    if(this.config?.primaryCategory === 'Blueprint Question Set'){
+      this.isHideLib =  true;
+    }
+
     this.config.mode =  _.get(this.config, 'mode').toLowerCase();
     if (!_.has(this.config, 'maxDepth')) { // TODO:: rethink this
       this.config.maxDepth = 4;
