@@ -936,7 +936,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     const questionId = this.questionId ? this.questionId : UUID.UUID();
     this.newQuestionID = questionId;
     const data = this.treeNodeData;
-    const parentRootId= data['data'].id
+    const parentRootId= data['data'].id;
+    const assessType =data['data']?.primaryCategory.split(' ');
+    const assessmentType = assessType[0]?.toString().split('/');
     const activeNode = this.treeService.getActiveNode();
     const selectedUnitId = _.get(activeNode, 'data.id');
     this.editorService.data = {};
@@ -989,7 +991,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           metadata: _.omit(metaData, ['creator']),
           objectType: 'Question',
           root: false,
-          isNew: !this.questionId
+          isNew: !this.questionId,
+          assessmentType:assessmentType
         },
         [parentRootId]:{
           metadata:rootMetaData,

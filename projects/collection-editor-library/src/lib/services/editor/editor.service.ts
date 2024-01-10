@@ -174,7 +174,7 @@ export class EditorService {
 
   updateQuestionSet(rootId:any, body:any):Observable<any> {
    const req = {
-    url: `${this.configService.urlConFig.URLS.QuestionSet.UPDATE}/${rootId}`,
+    url: `${this.configService.urlConFig.URLS.QuestionSet.UPDATE}${rootId}`,
     data: body
    };
    return this.publicDataService.patch(req)
@@ -418,6 +418,8 @@ export class EditorService {
       return node.root;
     });
     const parentNode = $(this.treeService.treeNativeElement).fancytree('getRootNode').getFirstChild().data;
+    var difficultyLevelList = []
+    var subjectList = []
     if(parentNode?.objectType === 'QuestionSet' && parentNode?.metadata?.primaryCategory === 'Blueprint Question Set'){
       _.forEach(this.treeService.treeCache.nodesModified, (node, nodeId)=>{
         if(!node.root){
@@ -431,6 +433,12 @@ export class EditorService {
           selectedQuestionType:selectedQuestionType,
           requiredQuestionCount:requiredQuestionCount,
           }]
+          difficultyLevelList.push(...difficultyLevel)
+          subjectList.push(...subject)
+        }
+        else {
+          this.treeService.treeCache.nodesModified[nodeId].metadata.subject = subjectList;
+          this.treeService.treeCache.nodesModified[nodeId].metadata.difficultyLevel = difficultyLevelList;
         }
       })    
     } 

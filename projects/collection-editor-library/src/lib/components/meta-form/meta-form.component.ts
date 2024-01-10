@@ -33,7 +33,9 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
   public subscription: Subscription;
   public formSectionProperties:any;
   public questionCountCriteriaFields:any[]=[];
-  isValidQuestionCriteria:boolean= false
+  isValidQuestionCriteria:boolean= false;
+  assessmentType:any;
+  treeNodeData:any;
   constructor(private editorService: EditorService, public treeService: TreeService,
               public frameworkService: FrameworkService, private helperService: HelperService,
               private configService: ConfigService, private toasterService: ToasterService) {
@@ -42,6 +44,8 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
 
   ngOnChanges() {
     this.fetchFrameWorkDetails();
+    this.treeNodeData = this.treeService.getFirstChild();
+    console.log('treeNodeData',this.treeNodeData)
     this.setAppIconData();
     if (_.has(this.nodeMetadata, 'data.metadata.shuffle')) {
       this.setShuffleValue(this.nodeMetadata.data.metadata.shuffle);
@@ -359,6 +363,9 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
   }
 
   getQuestionCountForQuestionCriteria(event) {
+    console.log('trww',this.treeNodeData)
+    const assessType = this.treeNodeData['data']?.metadata?.primaryCategory.split(' ');
+    this.assessmentType = assessType[0]?.toString().split('/')
     this.isValidQuestionCriteria = true;
     this.questionCountCriteriaFields.forEach((fields)=>{
       if(!event[fields] || !event[fields]?.length){
@@ -370,7 +377,8 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
       filters: {
         primaryCategory: [],
         objectType: ["Question"],
-        status: ["Live"]
+        status: ["Live"],
+        assessmentType:this.assessmentType
       },
     }
 
