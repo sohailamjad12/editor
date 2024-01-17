@@ -107,6 +107,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
               public configService: ConfigService, private changeDetectionRef: ChangeDetectorRef,
               private questionService: QuestionService,
               private editorCursor: EditorCursor) {
+            
   }
 
   @HostListener('window:unload', ['$event'])
@@ -115,6 +116,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
+    debugger
     this.editorService.initialize(this.editorConfig);
     this.editorMode = this.editorService.editorMode;
     this.treeService.initialize(this.editorConfig);
@@ -126,6 +128,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     // this.treeNodeData = this.treeService.getFirstChild();
 
     if (this.objectType === 'question') {
+      debugger
       this.collectionId = _.get(this.editorConfig, 'context.collectionIdentifier');
       this.initializeFrameworkAndChannel();
       this.editorService.getCategoryDefinition(_.get(this.editorConfig, 'context.collectionPrimaryCategory'),
@@ -154,6 +157,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           const collection = _.get(hierarchyResponse, `result.${this.objectType}`);
           this.toolbarConfig.title = collection.name;
           this.toolbarConfig.isAddCollaborator = (collection.createdBy === _.get(this.editorConfig, 'context.user.id'));
+          const getframeworkListData = JSON.parse(localStorage.getItem('frameworkDataObj'))
+          console.log('gettttt',getframeworkListData) 
+          collection.subject = getframeworkListData.subject;
+          collection.difficultyLevel = getframeworkListData.difficultyLevel
           this.initializeFrameworkAndChannel(collection);
         });
     }

@@ -7,6 +7,8 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 import { ConfigService } from '../../services/config/config.service';
 import { Router } from '@angular/router';
 import { HelperService } from '../../services/helper/helper.service';
+import 'jquery.fancytree';
+declare var $: any;
 
 @Component({
   selector: 'lib-content-library',
@@ -208,6 +210,45 @@ export class LibraryComponent implements OnInit, AfterViewInit, OnDestroy {
   getHierarchyData() {
     this.editorService.fetchCollectionHierarchy(this.collectionId).subscribe((response: any) => {
       this.collectionhierarcyData = response.result.content;
+      const dataObj = {
+        data:this.collectionhierarcyData
+      }
+  //  const parentNode = $(this.treeService.treeNativeElement).fancytree('getRootNode').getFirstChild().data;
+  const parentNode = this.treeService.getFirstChild();
+   console.log('Parrrrr',parentNode);
+   const metaDataObj = this.editorService.getMetaChildrenObj(parentNode);
+      console.log('metaData',metaDataObj)
+    let subjectList = []
+    let difficultyLevelList = []
+      Object.keys(metaDataObj).forEach(key => {
+        const value = metaDataObj[key];
+        console.log(value);
+        value.children.forEach((child)=>{
+          if(child.subject){
+            subjectList.push(...child.subject);
+          }
+          if(child.difficultyLevel){
+            difficultyLevelList.push(child.difficultyLevel);
+          }
+        })
+      });
+    
+   
+
+    const subjectListfirst =  new Set(subjectList);
+    const diffficultyListFirst = new Set(difficultyLevelList)
+
+    const uniqueSubjectList = [...subjectListfirst];
+    const uniqueDiffficultyList = [...diffficultyListFirst]
+
+    console.log('difficultyLevelList',uniqueSubjectList)
+    console.log('difficultyLevelList',uniqueDiffficultyList)
+    // this.collectionhierarcyData.subject = uniqueSubjectList;
+    // this.collectionhierarcyData.difficultyLevel = uniqueDiffficultyList;
+    // this.treeService.updateMetaDataProperty('subject',uniqueSubjectList)
+    // this.treeService.updateMetaDataProperty('difficultyLevel',uniqueDiffficultyList)
+
+
     }, err => {
       this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.001'));
     });

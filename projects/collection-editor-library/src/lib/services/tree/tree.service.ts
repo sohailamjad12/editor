@@ -9,6 +9,7 @@ import { HelperService } from '../helper/helper.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { skipWhile } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
+import { EditorService } from '../editor/editor.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -25,6 +26,8 @@ export class TreeService {
   public readonly treeStatus$: Observable<any> = this._treeStatus$
   .asObservable().pipe(skipWhile(status => status === undefined || status === null));
   previousNode: any;
+  subjectListData:any;
+  difficultyListData:any;
 
   constructor(private toasterService: ToasterService, private helperService: HelperService, public configService: ConfigService) { }
 
@@ -332,7 +335,46 @@ export class TreeService {
   }
 
   reloadTree(nodes: any) {
+    const metaDataObj = this.helperService.getMetaChildrenObj(nodes[0]);
+    console.log('metaData',metaDataObj)
+  let subjectList = []
+  let difficultyLevelList = []
+    Object.keys(metaDataObj).forEach(key => {
+      const value = metaDataObj[key];
+      console.log(value);
+      value.children.forEach((child)=>{
+        if(child.subject){
+          subjectList.push(...child.subject);
+        }
+        if(child.difficultyLevel){
+          difficultyLevelList.push(child.difficultyLevel);
+        }
+      })
+    });
+  
+ 
+
+  const subjectListfirst =  new Set(subjectList);
+  const diffficultyListFirst = new Set(difficultyLevelList)
+
+  const uniqueSubjectList = [...subjectListfirst];
+  const uniqueDiffficultyList = [...diffficultyListFirst]
+
+  console.log('difficultyLevelList',uniqueSubjectList)
+  console.log('difficultyLevelList',uniqueDiffficultyList)
+  this.subjectListData = uniqueSubjectList;
+  this.difficultyListData = uniqueDiffficultyList;
+  const frameworkObj = {
+    subject:this.subjectListData,
+    difficultyLevel:this.difficultyListData
+  }
+  localStorage.setItem('frameworkDataObj', JSON.stringify(frameworkObj))
+  // this.collectionhierarcyData.subject = uniqueSubjectList;
+  // this.collectionhierarcyData.difficultyLevel = uniqueDiffficultyList;
     this.getTreeObject().reload(nodes);
+    this.updateMetaDataProperty('subject',this.subjectListData)
+    this.updateMetaDataProperty('difficultyLevel',this.difficultyListData)
+    
     $('span.fancytree-title').attr('style', 'width:15em;text-overflow:ellipsis;white-space:nowrap;overflow:hidden');
   }
 }

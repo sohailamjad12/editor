@@ -56,6 +56,7 @@ export class EditorService {
     if (this.configService.editorConfig && this.configService.editorConfig.default) {
       this._editorConfig.config = _.assign(this.configService.editorConfig.default, this._editorConfig.config);
     }
+    
     this._editorMode = _.get(this._editorConfig, 'config.mode').toLowerCase();
     this.setIsReviewerEditEnable(_.get(this._editorConfig, 'context.enableReviewEdit', false));
     this.setQualityFormConfig(_.get(this._editorConfig, 'config.qualityFormConfig', null));
@@ -407,8 +408,31 @@ export class EditorService {
     const instance = this;
     this.data = {};
     const data = this.treeService.getFirstChild();
+     var modified = this.getUpdatedNodeMetaData();
+    if(data.data?.primaryCategory === 'Course' || data.data?.primaryCategory === 'PIAA Assessment' || data.data?.primaryCategory === 'Self Assessment' ){
+      const updatedNode = this.getUpdatedNodeMetaData()
+    const rootMetaData = {
+      difficultyLevel:data.data.difficultyLevel,
+      subject: data.data.subject,
+      "eval": {
+          "mode": "server"
+          //data.data.eval
+      },
+     }
+     modified ={
+      ...updatedNode,
+      [data.data.id]:{
+        metadata:rootMetaData,
+        objectType: 'QuestionSet',
+        root: true,
+        isNew:false
+      }
+    }
+    }
+   
+  
     return {
-      nodesModified: this.getUpdatedNodeMetaData(),
+      nodesModified: modified,  //condition to check questionset , blue
       hierarchy: instance.getHierarchyObj(data)
     };
   }
@@ -434,6 +458,9 @@ export class EditorService {
         }
       })    
     } 
+    else {
+
+    }
     _.forEach(this.treeService.treeCache.nodesModified, (node, nodeId)=>{
       if(!node.root && parentNode?.eval || parentNode?.metadata.eval){
         this.treeService.treeCache.nodesModified[nodeId].metadata.eval = parentNode.eval || parentNode?.metadata.eval;

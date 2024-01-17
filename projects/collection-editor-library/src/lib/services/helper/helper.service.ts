@@ -10,6 +10,8 @@ import { ConfigService } from '../config/config.service';
 })
 
 export class HelperService {
+  count= 0
+  data: any = {};
   // tslint:disable-next-line:variable-name
   private _availableLicenses: Array<any>;
   // tslint:disable-next-line:variable-name
@@ -170,6 +172,62 @@ export class HelperService {
       });
     }
     return;
+  }
+
+  getRelationalMetadataObj(data) {
+    let relationalMetadata = {};
+    _.forEach(data, (child) => {
+      if (_.get(child, 'data.metadata.relationalMetadata')) {
+        relationalMetadata = {
+          ...relationalMetadata,
+          [child.data.id]: _.get(child, 'data.metadata.relationalMetadata')
+        };
+      }
+    });
+    return relationalMetadata;
+  }
+
+  getMetaChildrenObj(data, questionId?, selectUnitId?, parentId?,subject?,difficultyLevel?) {
+    const instance = this;
+    if (data && data) {
+      const relationalMetadata = this.getRelationalMetadataObj(data.children);
+      instance.data[data.id] = {
+        name: data.title,
+        // children: _.map(data.children, (child) => child.data.id),
+        children: _.map(data?.children, (child) => ({
+          id:child.id,
+          subject:child.metadata.subject,
+          difficultyLevel:child.metadata.difficultyLevel
+        })),
+        ...(!_.isEmpty(relationalMetadata) &&  {relationalMetadata}),
+        root: data.root
+      };
+      console.log('finalObj',instance.data[data.id])
+      // if (questionId && selectUnitId && selectUnitId === data.data.id) {
+      //     if (parentId) {
+      //       const children = instance.data[data.data.id].children;
+      //       const index = _.findIndex(children, (e) => {
+      //         return e === parentId;
+      //       }, 0);
+      //       const setIndex = index + 1;
+      //       children.splice(setIndex, 0, questionId);
+      //     } else {
+      //       const childData={
+      //         id:questionId,
+      //         subject:subject,
+      //         difficultyLevel:difficultyLevel
+      //       }
+      //       instance.data[data.data.id].children.push(childData);
+      //     }
+      // }
+      // if (questionId && selectUnitId && data.folder === false) {
+      //     delete instance.data[data.data.id];
+      // }
+      _.forEach(data.children, (collection) => {
+        instance.getMetaChildrenObj(collection, questionId, selectUnitId, parentId,subject,difficultyLevel );
+      });
+    }
+    return instance.data;
   }
 
 }
