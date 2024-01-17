@@ -977,6 +977,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log('difficultyLevelList',uniqueSubjectList)
     console.log('difficultyLevelList',uniqueDiffficultyList)
      metaData.eval = activeNode?.data.metadata.eval || data?.data.eval
+     metaData.assessmentType = assessmentType
      const rootMetaData = {
       difficultyLevel:uniqueDiffficultyList,
       subject: uniqueSubjectList,
@@ -991,8 +992,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           metadata: _.omit(metaData, ['creator']),
           objectType: 'Question',
           root: false,
-          isNew: !this.questionId,
-          assessmentType:assessmentType
+          isNew: !this.questionId
         },
         [parentRootId]:{
           metadata:rootMetaData,
