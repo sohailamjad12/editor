@@ -411,14 +411,22 @@ export class EditorService {
      var modified = this.getUpdatedNodeMetaData();
     if(data.data?.primaryCategory === 'Course' || data.data?.primaryCategory === 'PIAA Assessment' || data.data?.primaryCategory === 'Self Assessment' ){
       const updatedNode = this.getUpdatedNodeMetaData()
-    const rootMetaData = {
-      difficultyLevel:data.data.difficultyLevel,
-      subject: data.data.subject,
-      "eval": {
+      let collection={};
+      if(localStorage.getItem('frameworkDataObj')){
+        const getframeworkListData = JSON.parse(localStorage.getItem('frameworkDataObj'))
+        console.log('gettttt', getframeworkListData)
+        collection['subject'] = getframeworkListData.subject;
+        collection['difficultyLevel'] = getframeworkListData.difficultyLevel
+      }
+      const rootMetaData = {
+        difficultyLevel: data?.data?.difficultyLevel ? [...data?.data?.difficultyLevel, ...collection['difficultyLevel']] : collection['difficultyLevel']?[...collection['difficultyLevel']]:[],
+        subject: data?.data?.subject ? [...data?.data?.subject, ...collection['subject']] : collection['subject']?[...collection['subject']]:[],
+        "eval": {
           "mode": "server"
           //data.data.eval
-      },
-     }
+        },
+      }
+     //console.log('-------->',rootMetaData);
      modified ={
       ...updatedNode,
       [data.data.id]:{

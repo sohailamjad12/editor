@@ -351,7 +351,9 @@ export class TreeService {
         }
       })
     });
-  
+     difficultyLevelList = difficultyLevelList.reduce((acc, current) => {
+      return acc.concat(Array.isArray(current) ? current : [current]);
+    }, []);
  
 
   const subjectListfirst =  new Set(subjectList);
