@@ -22,7 +22,7 @@
     </div>
     {{configService.labelConfig?.button_labels?.add_from_library_btn_label}}
   </button>
-  <div class="d-flex mt-10 mr-30" *ngIf="config.objectType === 'QuestionSet'">
+  <div class="d-flex mt-10 mr-30" *ngIf="config.objectType === 'QuestionSet' && config.primaryCategory !== 'Blueprint Question Set'">
     <button [disabled]="!visibility?.addQuestionFromLibrary" (click)="addQuestionFromLibrary();"
     [ngClass]="[!visibility?.addQuestionFromLibrary ? 'sb-btn-outline-disabled' : 'sb-btn-outline-primary', (visibility?.addQuestionFromLibrary && buttonLoaders?.addQuestionFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']"
     class="sb-btn sb-btn-normal  mr-10" libTelemetryInteract
