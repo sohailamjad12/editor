@@ -426,7 +426,7 @@ export class EditorService {
           //data.data.eval
         },
       }
-     console.log('-------->',rootMetaData);
+     //console.log('-------->',rootMetaData);
      modified ={
       ...updatedNode,
       [data.data.id]:{
