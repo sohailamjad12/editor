@@ -154,6 +154,13 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           const collection = _.get(hierarchyResponse, `result.${this.objectType}`);
           this.toolbarConfig.title = collection.name;
           this.toolbarConfig.isAddCollaborator = (collection.createdBy === _.get(this.editorConfig, 'context.user.id'));
+          if(localStorage.getItem('frameworkDataObj')){
+            const getframeworkListData = JSON.parse(localStorage.getItem('frameworkDataObj'))
+            console.log('gettttt', getframeworkListData)
+            collection.subject = getframeworkListData.subject;
+            collection.difficultyLevel = getframeworkListData.difficultyLevel
+          }
+          
           this.initializeFrameworkAndChannel(collection);
         });
     }
@@ -786,6 +793,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.treeService.clearTreeCache();
           this.treeService.nextTreeStatus('saved');
           resolve(_.get(this.configService, 'labelConfig.messages.success.001'));
+          localStorage.setItem('frameworkDataObj', '');
         }, err => {
           reject(_.get(this.configService, 'labelConfig.messages.error.001'));
         });
@@ -1295,6 +1303,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     const selectedNode = this.treeService.getActiveNode();
     if (selectedNode && selectedNode.data.id) {
       this.formStatusMapper[selectedNode.data.id] = form.isValid;
+      // if(selectedNode?.data?.primaryCategory === 'Practice Question Set' || selectedNode?.data?.primaryCategory==='Blueprint Question Set' ){
+      //   this.formStatusMapper[selectedNode.data.id] = false;
+      // }
     }
   }
 

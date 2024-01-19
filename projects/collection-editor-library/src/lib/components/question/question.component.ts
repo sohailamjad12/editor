@@ -981,9 +981,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
      const rootMetaData = {
       difficultyLevel:uniqueDiffficultyList,
       subject: uniqueSubjectList,
-      "eval": {
-          "mode": "server"
-      },
+      eval:data?.data?.metadata?.eval || data?.data.eval
      }
     this.setQuestionTypeValues(metaData);
     return {

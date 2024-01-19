@@ -407,8 +407,33 @@ export class EditorService {
     const instance = this;
     this.data = {};
     const data = this.treeService.getFirstChild();
+    var modified = this.getUpdatedNodeMetaData();
+    if(data.data?.primaryCategory === 'Course' || data.data?.primaryCategory === 'PIAA Assessment' || data.data?.primaryCategory === 'Self Assessment' ){
+      const updatedNode = this.getUpdatedNodeMetaData()
+      let collection={};
+      if(localStorage.getItem('frameworkDataObj')){
+        const getframeworkListData = JSON.parse(localStorage.getItem('frameworkDataObj'))
+        console.log('gettttt', getframeworkListData)
+        collection['subject'] = getframeworkListData.subject;
+        collection['difficultyLevel'] = getframeworkListData.difficultyLevel
+      }
+    const rootMetaData = {
+      difficultyLevel: data?.data?.difficultyLevel ? [...data?.data?.difficultyLevel, ...collection['difficultyLevel']] : collection['difficultyLevel']?[...collection['difficultyLevel']]:[],
+      subject: data?.data?.subject ? [...data?.data?.subject, ...collection['subject']] : collection['subject']?[...collection['subject']]:[],
+      eval:data?.data?.metadata?.eval || data?.data.eval,
+     }
+     modified ={
+      ...updatedNode,
+      [data.data.id]:{
+        metadata:rootMetaData,
+        objectType: 'Collection',
+        root: true,
+        isNew:false
+      }
+    }
+    }
     return {
-      nodesModified: this.getUpdatedNodeMetaData(),
+      nodesModified: modified,
       hierarchy: instance.getHierarchyObj(data)
     };
   }
