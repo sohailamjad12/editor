@@ -255,23 +255,26 @@ export class TreeService {
         root: activeNode && activeNode.root ? true : false,
         objectType: metadata.objectType,
         metadata: { ..._.omit(metadata, ['objectType']) },
-        ...(nodeId.includes('do_') ? { isNew: false } : { isNew: true })
+        ...(nodeId.includes('do_') ? { isNew: false } : { isNew: true }),
+        
       };
+      this.treeCache.nodesModified[nodeId].metadata.eval = this.configService.editorConfig.client
+
       this.treeCache.nodes.push(nodeId); // To track sequence of modifiation
     }
   }
 
   updateEvaluable(nodeId){
     this.treeCache.nodesModified[nodeId].metadata.eval = this.treeCache.nodesModified[nodeId].metadata.primaryCategory === this.configService.editorConfig.evaluableQuestionSet ? 
-    this.configService.editorConfig.server:this.configService.editorConfig.client;
+    this.configService.editorConfig.client:this.configService.editorConfig.client;
       if(!this.treeCache.nodesModified[nodeId].root){
           this.treeCache.nodesModified[nodeId].metadata.eval = this.getFirstChild().data.primaryCategory === this.configService.editorConfig.evaluableQuestionSet? 
-          this.configService.editorConfig.server:this.configService.editorConfig.client;
+          this.configService.editorConfig.client:this.configService.editorConfig.client;
           this.overrideEvaluable(nodeId);
         } else {
            if(this.getFirstChild().data.metadata.mode) {
             this.treeCache.nodesModified[nodeId].metadata.eval = this.getFirstChild().data.metadata.mode === this.configService.editorConfig.editorModeCheck ? 
-            this.configService.editorConfig.server:this.configService.editorConfig.client;
+            this.configService.editorConfig.client:this.configService.editorConfig.client;
           }
           this.updateFirstChild(this.treeCache.nodesModified[nodeId].metadata.eval)
       }

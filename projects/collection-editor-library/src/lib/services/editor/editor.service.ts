@@ -407,37 +407,92 @@ export class EditorService {
     const instance = this;
     this.data = {};
     const data = this.treeService.getFirstChild();
-    var modified = this.getUpdatedNodeMetaData();
+    var modified ;
     if(data.data?.primaryCategory === 'Course' || data.data?.primaryCategory === 'PIAA Assessment' || data.data?.primaryCategory === 'Self Assessment' ){
-      const updatedNode = this.getUpdatedNodeMetaData()
-      let collection={};
-      if(localStorage.getItem('frameworkDataObj')){
-        const getframeworkListData = JSON.parse(localStorage.getItem('frameworkDataObj'))
-        console.log('gettttt', getframeworkListData)
-        collection['subject'] = getframeworkListData.subject;
-        collection['difficultyLevel'] = getframeworkListData.difficultyLevel
-      }
-    const rootMetaData = {
-      difficultyLevel: data?.data?.difficultyLevel ? [...data?.data?.difficultyLevel, ...collection['difficultyLevel']] : collection['difficultyLevel']?[...collection['difficultyLevel']]:[],
-      subject: data?.data?.subject ? [...data?.data?.subject, ...collection['subject']] : collection['subject']?[...collection['subject']]:[],
-      eval:data?.data?.metadata?.eval || data?.data.eval,
-     }
-     modified ={
-      ...updatedNode,
-      [data.data.id]:{
-        metadata:rootMetaData,
-        objectType: 'Collection',
-        root: true,
-        isNew:false
-      }
+      // const updatedNode = this.getUpdatedNodeMetaData()
+      // let collection={};
+      // if(localStorage.getItem('frameworkDataObj')){
+      //   const getframeworkListData = JSON.parse(localStorage.getItem('frameworkDataObj'))
+      //   console.log('gettttt', getframeworkListData)
+      //   collection['subject'] = getframeworkListData.subject;
+      //   collection['difficultyLevel'] = getframeworkListData.difficultyLevel
+      // }
+    // const rootMetaData = {
+    //   difficultyLevel: data?.data?.difficultyLevel ? [...data?.data?.difficultyLevel, ...collection['difficultyLevel']] : collection['difficultyLevel']?[...collection['difficultyLevel']]:[],
+    //   subject: data?.data?.subject ? [...data?.data?.subject, ...collection['subject']] : collection['subject']?[...collection['subject']]:[],
+    //   eval:data?.data?.metadata?.eval || data?.data.eval,
+    //  }
+    //  modified ={
+    //   ...updatedNode,
+    //   [data.data.id]:{
+    //     metadata:rootMetaData,
+    //     objectType: 'Collection',
+    //     root: true,
+    //     isNew:false,
+    //   }
+    // }
+    modified = this.getUpdatedCourseNodeMetaData()
     }
+    else {
+      modified = this.getUpdatedNodeMetaData();
     }
     return {
       nodesModified: modified,
       hierarchy: instance.getHierarchyObj(data)
     };
   }
+  getUpdatedCourseNodeMetaData(){
+    const parentNodeId = _.findKey(this.treeService.treeCache.nodesModified,(node)=>{
+      return node.root;
+    });
+    const parentNode = $(this.treeService.treeNativeElement).fancytree('getRootNode').getFirstChild().data;
+    var difficultyLevelList = []
+    var subjectList = []
 
+    // if(parentNode?.objectType === 'QuestionSet' && parentNode?.metadata?.primaryCategory === 'Blueprint Question Set'){
+    //   _.forEach(this.treeService.treeCache.nodesModified, (node, nodeId)=>{
+    //     if(!node.root){
+    //       const {board, medium, gradeLevel, subject, difficultyLevel, selectedQuestionType, requiredQuestionCount} = this.treeService.treeCache.nodesModified[nodeId]?.metadata;
+    //       this.treeService.treeCache.nodesModified[nodeId].metadata.criterias = [{
+    //       board:board,
+    //       medium:medium,
+    //       gradeLevel:gradeLevel,
+    //       subject:subject,
+    //       difficultyLevel:difficultyLevel,
+    //       selectedQuestionType:selectedQuestionType,
+    //       requiredQuestionCount:requiredQuestionCount,
+    //       }]
+    //       difficultyLevelList.push(...difficultyLevel)
+    //       subjectList.push(...subject)
+    //     }
+    //     else {
+    //       this.treeService.treeCache.nodesModified[nodeId].metadata.subject = subjectList;
+    //       this.treeService.treeCache.nodesModified[nodeId].metadata.difficultyLevel = difficultyLevelList;
+    //     }
+    //   })    
+    // } 
+    const data = this.treeService.getFirstChild();
+    
+    let collection={};
+    if(localStorage.getItem('frameworkDataObj')){
+      const getframeworkListData = JSON.parse(localStorage.getItem('frameworkDataObj'))
+      console.log('gettttt', getframeworkListData)
+      collection['subject'] = getframeworkListData.subject;
+      collection['difficultyLevel'] = getframeworkListData.difficultyLevel
+    }
+    parentNode.metadata.subject =parentNode?.metadata?.subject ? [...parentNode?.metadata?.subject, ...collection['subject']] : collection['subject']?[...collection['subject']]:[]
+    parentNode.metadata.difficultyLevel = parentNode?.metadata?.difficultyLevel ? [...parentNode?.metadata?.difficultyLevel, ...collection['difficultyLevel']] : collection['difficultyLevel']?[...collection['difficultyLevel']]:[]
+    parentNode.root = true;
+    _.forEach(this.treeService.treeCache.nodesModified, (node, nodeId)=>{
+      if(!node.root && parentNode?.eval || parentNode?.metadata.eval){
+        this.treeService.treeCache.nodesModified[nodeId].metadata.eval = parentNode.eval || parentNode?.metadata.eval;
+      }
+
+    })
+    this.treeService.treeCache.nodesModified[parentNodeId]?.metadata.hasOwnProperty('mode')? 
+    delete this.treeService.treeCache.nodesModified[parentNodeId]?.metadata?.mode:''
+    return this.treeService.treeCache.nodesModified;
+  }
   getUpdatedNodeMetaData(){
     const parentNodeId = _.findKey(this.treeService.treeCache.nodesModified,(node)=>{
       return node.root;

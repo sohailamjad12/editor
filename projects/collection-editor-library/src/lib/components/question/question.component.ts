@@ -976,13 +976,18 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
     console.log('difficultyLevelList',uniqueSubjectList)
     console.log('difficultyLevelList',uniqueDiffficultyList)
-     metaData.eval = activeNode?.data.metadata.eval || data?.data.eval
+    //  metaData.eval = activeNode?.data.metadata.eval || data?.data.eval || data?.eval
+    metaData.eval= {
+      "mode": "client"
+    }
      metaData.assessmentType = assessmentType
      metaData.visibility = 'Default'
      const rootMetaData = {
       difficultyLevel:uniqueDiffficultyList,
       subject: uniqueSubjectList,
-      eval:data?.data?.metadata?.eval || data?.data.eval
+      eval: {
+        "mode": "client"
+    },
      }
     this.setQuestionTypeValues(metaData);
     return {
