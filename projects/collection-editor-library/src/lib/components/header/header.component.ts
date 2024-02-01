@@ -99,6 +99,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
 
   buttonEmitter(action) {
     this.toolbarEmitter.emit({ button: action.type, ...(action.comment && { comment: this.rejectComment }) });
+    this.editorService.updateFormTouched(true);
   }
 
   openPublishCheckListPopup(action) {

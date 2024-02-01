@@ -18,7 +18,7 @@ let framworkServiceTemp;
   styleUrls: ['./meta-form.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class MetaFormComponent implements OnChanges, OnDestroy {
+export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input() rootFormConfig: any;
   @Input() unitFormConfig: any;
   @Input() nodeMetadata: any;
@@ -34,6 +34,7 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
   public formSectionProperties:any;
   public questionCountCriteriaFields:any[]=[];
   isValidQuestionCriteria:boolean= false;
+  generatedForm: FormGroup;
   assessmentType:any;
   treeNodeData:any;
   constructor(private editorService: EditorService, public treeService: TreeService,
@@ -41,6 +42,14 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
               private configService: ConfigService, private toasterService: ToasterService) {
                 framworkServiceTemp = frameworkService;
                }
+  ngOnInit(): void {
+    this.editorService.formTouched.subscribe((res) => {
+      if (res) {
+        this.markastouched();
+        this.editorService.updateFormTouched(false);
+      }
+    })
+  }
 
   ngOnChanges() {
     this.fetchFrameWorkDetails();
@@ -271,6 +280,7 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
 
         }
       });
+      console.log('form fields', JSON.stringify(this.formFieldProperties))
     });
   
   }
@@ -289,7 +299,20 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     }
     return false;
   }
-  outputData(eventData: any) { }
+
+  outputData(eventData: any) { 
+    this.generatedForm = eventData;
+  }
+
+  markastouched() {
+    this.generatedForm.markAsTouched();
+    this.generatedForm.markAsDirty();
+    Object.keys(this.generatedForm.controls).forEach((key: string) => {
+        const control = this.generatedForm.get(key);
+        control!.markAsTouched();
+        control!.markAsDirty();
+      });
+  }
 
   onStatusChanges(event) {
     this.toolbarEmitter.emit({ button: 'onFormStatusChange', event });

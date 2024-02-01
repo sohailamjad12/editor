@@ -46,6 +46,7 @@ export class EditorService {
   treeData: any;
   private _qualityFormConfig: any;
   private _isReviewerQualityCheckEnabled: boolean;
+  formTouched = new EventEmitter<Boolean>()
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService, private dataService: DataService, public httpClient: HttpClient) {
@@ -983,4 +984,9 @@ getDependentNodes(identifier) {
       return config;
     }
   }
+
+  updateFormTouched(event) {
+    this.formTouched.emit(event);
+  }
+  
 }
