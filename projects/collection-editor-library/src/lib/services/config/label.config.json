@@ -54,6 +54,7 @@
        "subject":"Competency",
        "medium":"Role",
        "gradeLevel":"Class",
+       "difficultyLevel":"Competency Level",
        "contentType":"Content Type",
        "reset":"Reset",
        "apply":"apply",
