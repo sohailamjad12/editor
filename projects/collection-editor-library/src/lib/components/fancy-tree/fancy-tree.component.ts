@@ -45,14 +45,14 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   public rootMenuTemplate = `<span class="ui dropdown sb-dotted-dropdown" autoclose="itemClick" suidropdown="" tabindex="0">
   <span id="contextMenu" class="p-0 w-auto"><i class="icon ellipsis vertical sb-color-black"></i></span>
   <span id= "contextMenuDropDown" class="menu transition hidden" suidropdownmenu="" style="">
-    <div id="addchild" class="item">Add Child</div>
+    <div id="addchild" class="item">Add Sub-section</div>
   </span>
   </span>`;
   public folderMenuTemplate = `<span id= "removeNodeIcon"> <i class="fa fa-trash-o" type="button"></i> </span><span class="ui dropdown sb-dotted-dropdown" autoclose="itemClick" suidropdown="" tabindex="0">
   <span id="contextMenu" class="p-0 w-auto"><i class="icon ellipsis vertical sb-color-black"></i></span>
   <span id= "contextMenuDropDown" class="menu transition hidden" suidropdownmenu="" style="">
-    <div id="addsibling" class="item">Add Sibling</div>
-    <div id="addchild" class="item">Add Child</div>
+    <div id="addsibling" class="item">Add Section</div>
+    <div id="addchild" class="item">Add Sub-section</div>
     <div id="delete" class="item">Delete</div>
   </span>
   </span>`;
