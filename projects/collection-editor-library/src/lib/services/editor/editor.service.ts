@@ -272,7 +272,8 @@ export class EditorService {
     const requestBody = {
       request: {
         [objType]: {
-          rejectComment: _.trim(comment)
+          rejectComment: _.trim(comment),
+          reviewerId: this.editorConfig.context.user.id
         }
       }
     };
@@ -290,7 +291,8 @@ export class EditorService {
     const requestBody = {
       request: {
         [objType]: {
-          lastPublishedBy: this.editorConfig.context.user.id
+          lastPublishedBy: this.editorConfig.context.user.id,
+          reviewerId: this.editorConfig.context.user.id
         }
       }
     };
